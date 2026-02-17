@@ -4,9 +4,10 @@
   "description": "NestJS backend for Aziz Poultry Farm Management System",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "nest build",
     "start": "node dist/main.js",
     "start:dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "start:prod": "node dist/main.js",
     "lint": "echo \"No linter configured\""
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
+    "@nestjs/cli": "^11.0.0",
     "@types/bcrypt": "^5.0.2",
     "@types/node": "^22.10.0",
     "@types/passport-jwt": "^4.0.1",
