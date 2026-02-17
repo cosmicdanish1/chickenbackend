@@ -17,7 +17,7 @@ export class SettingsService {
   }
 
   async findOne(id: string): Promise<Settings> {
-    const setting = await this.settingsRepository.findOne({ where: { id } });
+    const setting = await this.settingsRepository.findOne({ where: { key: id } });
     if (!setting) {
       throw new NotFoundException(`Setting with id ${id} not found`);
     }

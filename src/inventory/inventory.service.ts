@@ -34,7 +34,7 @@ export class InventoryService {
   }
 
   async findOne(id: string): Promise<InventoryItem> {
-    const item = await this.inventoryRepository.findOne({ where: { id } });
+    const item = await this.inventoryRepository.findOne({ where: { id: parseInt(id) } });
     if (!item) {
       throw new NotFoundException(`Inventory item with ID ${id} not found`);
     }
