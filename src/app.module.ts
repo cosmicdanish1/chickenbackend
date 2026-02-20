@@ -34,17 +34,36 @@ import { AuditLog } from './audit/audit-log.entity';
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: config.get<'postgres'>('DB_TYPE', 'postgres'),
-        host: config.get<string>('DB_HOST', 'localhost'),
-        port: config.get<number>('DB_PORT', 5432),
-        username: config.get<string>('DB_USERNAME', 'postgres'),
-        password: config.get<string>('DB_PASSWORD', 'postgres'),
-        database: config.get<string>('DB_NAME', 'poultry'),
-        entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog],
-        synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
-        logging: config.get<boolean>('DB_LOGGING', false),
-      }),
+      useFactory: (config: ConfigService) => {
+        // Support DATABASE_URL for Render deployment (single connection string)
+        const databaseUrl = config.get<string>('DATABASE_URL');
+        
+        if (databaseUrl) {
+          return {
+            type: 'postgres' as const,
+            url: databaseUrl,
+            ssl: {
+              rejectUnauthorized: false
+            },
+            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog],
+            synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
+            logging: config.get<boolean>('DB_LOGGING', false),
+          };
+        }
+
+        // Fallback to individual environment variables
+        return {
+          type: config.get<'postgres'>('DB_TYPE', 'postgres'),
+          host: config.get<string>('DB_HOST', 'localhost'),
+          port: config.get<number>('DB_PORT', 5432),
+          username: config.get<string>('DB_USERNAME', 'postgres'),
+          password: config.get<string>('DB_PASSWORD', 'postgres'),
+          database: config.get<string>('DB_NAME', 'poultry'),
+          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog],
+          synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
+          logging: config.get<boolean>('DB_LOGGING', false),
+        };
+      },
     }),
     VehiclesModule,
     HealthModule,
