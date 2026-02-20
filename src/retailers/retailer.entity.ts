@@ -23,6 +23,9 @@ export class Retailer {
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
+  @Column({ type: 'varchar', length: 20, default: 'active' })
+  status!: string;
+
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
   createdAt!: Date;
 
