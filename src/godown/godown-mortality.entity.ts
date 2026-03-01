@@ -1,0 +1,25 @@
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+
+@Entity('godown_mortality')
+export class GodownMortality {
+  @PrimaryGeneratedColumn('increment', { type: 'bigint' })
+  id!: string;
+
+  @Column({ name: 'mortality_date', type: 'date' })
+  mortalityDate!: string;
+
+  @Column({ name: 'number_of_birds_died', type: 'integer' })
+  numberOfBirdsDied!: number;
+
+  @Column({ type: 'text', nullable: true })
+  reason?: string;
+
+  @Column({ type: 'text', nullable: true })
+  notes?: string;
+
+  @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
+  createdAt!: Date;
+
+  @Column({ name: 'updated_at', type: 'timestamptz', default: () => 'NOW()' })
+  updatedAt!: Date;
+}

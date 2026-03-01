@@ -25,6 +25,11 @@ import { SettingsModule } from './settings/settings.module';
 import { Settings } from './settings/settings.entity';
 import { AuditModule } from './audit/audit.module';
 import { AuditLog } from './audit/audit-log.entity';
+import { GodownModule } from './godown/godown.module';
+import { GodownInwardEntry } from './godown/godown-inward.entity';
+import { GodownSale } from './godown/godown-sale.entity';
+import { GodownMortality } from './godown/godown-mortality.entity';
+import { GodownExpense } from './godown/godown-expense.entity';
 
 @Module({
   imports: [
@@ -45,7 +50,7 @@ import { AuditLog } from './audit/audit-log.entity';
             ssl: {
               rejectUnauthorized: false
             },
-            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog],
+            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
             synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
             logging: config.get<boolean>('DB_LOGGING', false),
           };
@@ -59,7 +64,7 @@ import { AuditLog } from './audit/audit-log.entity';
           username: config.get<string>('DB_USERNAME', 'postgres'),
           password: config.get<string>('DB_PASSWORD', 'postgres'),
           database: config.get<string>('DB_NAME', 'poultry'),
-          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog],
+          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
           synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
           logging: config.get<boolean>('DB_LOGGING', false),
         };
@@ -78,6 +83,7 @@ import { AuditLog } from './audit/audit-log.entity';
     InventoryModule,
     SettingsModule,
     AuditModule,
+    GodownModule,
   ],
 })
 export class AppModule {}
