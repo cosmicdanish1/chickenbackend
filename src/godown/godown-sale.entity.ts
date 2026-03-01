@@ -1,8 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Retailer } from '../retailers/retailer.entity';
-import { Vehicle } from '../vehicles/vehicle.entity';
-
-export type PaymentStatusType = 'paid' | 'pending' | 'partial';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('godown_sales')
 export class GodownSale {
@@ -12,7 +8,7 @@ export class GodownSale {
   @Column({ name: 'sale_date', type: 'date' })
   saleDate!: string;
 
-  @Column({ name: 'invoice_number', type: 'varchar', length: 50, unique: true, nullable: true })
+  @Column({ name: 'invoice_number', type: 'varchar', length: 50, nullable: true })
   invoiceNumber?: string;
 
   @Column({ name: 'customer_name', type: 'varchar', length: 150 })
@@ -21,16 +17,8 @@ export class GodownSale {
   @Column({ name: 'retailer_id', type: 'bigint', nullable: true })
   retailerId?: string;
 
-  @ManyToOne(() => Retailer, { nullable: true })
-  @JoinColumn({ name: 'retailer_id' })
-  retailer?: Retailer;
-
   @Column({ name: 'vehicle_id', type: 'bigint', nullable: true })
   vehicleId?: string;
-
-  @ManyToOne(() => Vehicle, { nullable: true })
-  @JoinColumn({ name: 'vehicle_id' })
-  vehicle?: Vehicle;
 
   @Column({ name: 'number_of_birds', type: 'integer' })
   numberOfBirds!: number;
@@ -47,16 +35,10 @@ export class GodownSale {
   @Column({ name: 'total_amount', type: 'numeric', precision: 14, scale: 2, nullable: true })
   totalAmount?: number;
 
-  @Column({
-    name: 'payment_status',
-    type: 'enum',
-    enum: ['paid', 'pending', 'partial'],
-    enumName: 'payment_status_type',
-    default: 'pending',
-  })
-  paymentStatus!: PaymentStatusType;
+  @Column({ name: 'payment_status', type: 'enum', enum: ['paid', 'pending', 'partial'] })
+  paymentStatus!: 'paid' | 'pending' | 'partial';
 
-  @Column({ name: 'amount_received', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  @Column({ name: 'amount_received', type: 'numeric', precision: 14, scale: 2 })
   amountReceived!: number;
 
   @Column({ type: 'text', nullable: true })

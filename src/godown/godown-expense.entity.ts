@@ -1,8 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-export type ExpenseCategoryType = 'feed' | 'labor' | 'medicine' | 'utilities' | 'equipment' | 'maintenance' | 'transportation' | 'other';
-export type PaymentMethodType = 'cash' | 'bank_transfer' | 'check' | 'credit_card';
-
 @Entity('godown_expenses')
 export class GodownExpense {
   @PrimaryGeneratedColumn('increment', { type: 'bigint' })
@@ -11,12 +8,8 @@ export class GodownExpense {
   @Column({ name: 'expense_date', type: 'date' })
   expenseDate!: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['feed', 'labor', 'medicine', 'utilities', 'equipment', 'maintenance', 'transportation', 'other'],
-    enumName: 'expense_category_type',
-  })
-  category!: ExpenseCategoryType;
+  @Column({ name: 'category', type: 'enum', enum: ['feed', 'labor', 'medicine', 'utilities', 'equipment', 'maintenance', 'transportation', 'other'] })
+  category!: string;
 
   @Column({ type: 'text' })
   description!: string;
@@ -24,13 +17,8 @@ export class GodownExpense {
   @Column({ type: 'numeric', precision: 14, scale: 2 })
   amount!: number;
 
-  @Column({
-    name: 'payment_method',
-    type: 'enum',
-    enum: ['cash', 'bank_transfer', 'check', 'credit_card'],
-    enumName: 'payment_method_type',
-  })
-  paymentMethod!: PaymentMethodType;
+  @Column({ name: 'payment_method', type: 'enum', enum: ['cash', 'bank_transfer', 'check', 'credit_card'] })
+  paymentMethod!: string;
 
   @Column({ type: 'text', nullable: true })
   notes?: string;

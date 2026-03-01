@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Vehicle } from '../vehicles/vehicle.entity';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity('godown_inward_entries')
 export class GodownInwardEntry {
@@ -17,10 +16,6 @@ export class GodownInwardEntry {
 
   @Column({ name: 'vehicle_id', type: 'bigint', nullable: true })
   vehicleId?: string;
-
-  @ManyToOne(() => Vehicle, { nullable: true })
-  @JoinColumn({ name: 'vehicle_id' })
-  vehicle?: Vehicle;
 
   @Column({ name: 'number_of_birds', type: 'integer' })
   numberOfBirds!: number;
