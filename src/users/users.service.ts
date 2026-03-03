@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -30,6 +30,12 @@ export class UsersService {
   }
 
   async create(dto: CreateUserDto): Promise<User> {
+    // Check if email already exists
+    const existingUser = await this.findByEmail(dto.email.toLowerCase());
+    if (existingUser) {
+      throw new ConflictException(`User with email ${dto.email} already exists`);
+    }
+
     const passwordHash = await bcrypt.hash(dto.password, 10);
 
     const user = this.usersRepository.create({
@@ -40,11 +46,26 @@ export class UsersService {
       status: dto.status ?? 'active',
     });
 
-    return this.usersRepository.save(user);
+    try {
+      return await this.usersRepository.save(user);
+    } catch (error: any) {
+      if (error.code === '23505') {
+        throw new ConflictException(`User with email ${dto.email} already exists`);
+      }
+      throw error;
+    }
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+
+    // Check if email is being changed and if it already exists
+    if (dto.email !== undefined && dto.email.toLowerCase() !== user.email) {
+      const existingUser = await this.findByEmail(dto.email.toLowerCase());
+      if (existingUser && existingUser.id !== id) {
+        throw new ConflictException(`User with email ${dto.email} already exists`);
+      }
+    }
 
     if (dto.password) {
       user.passwordHash = await bcrypt.hash(dto.password, 10);
@@ -55,7 +76,14 @@ export class UsersService {
     if (dto.role !== undefined) user.role = dto.role;
     if (dto.status !== undefined) user.status = dto.status;
 
-    return this.usersRepository.save(user);
+    try {
+      return await this.usersRepository.save(user);
+    } catch (error: any) {
+      if (error.code === '23505') {
+        throw new ConflictException(`User with email ${dto.email} already exists`);
+      }
+      throw error;
+    }
   }
 
   async deactivate(id: string): Promise<User> {
