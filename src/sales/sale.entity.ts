@@ -3,6 +3,7 @@ import { Retailer } from '../retailers/retailer.entity';
 
 export type SaleProductType = 'eggs' | 'meat' | 'chicks' | 'other';
 export type PaymentStatusType = 'paid' | 'pending' | 'partial';
+export type SaleModeType = 'from_vehicle' | 'from_godown';
 
 @Entity({ name: 'sales' })
 export class Sale {
@@ -17,6 +18,15 @@ export class Sale {
 
   @Column({ name: 'sale_date', type: 'date' })
   saleDate!: string;
+
+  @Column({
+    name: 'sale_mode',
+    type: 'enum',
+    enum: ['from_vehicle', 'from_godown'],
+    enumName: 'sale_mode_type',
+    default: 'from_vehicle',
+  })
+  saleMode!: SaleModeType;
 
   @Column({
     name: 'product_type',

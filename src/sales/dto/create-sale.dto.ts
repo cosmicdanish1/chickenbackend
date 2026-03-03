@@ -1,5 +1,5 @@
 import { IsString, IsOptional, IsDateString, IsEnum, MaxLength } from 'class-validator';
-import { SaleProductType, PaymentStatusType } from '../sale.entity';
+import { SaleProductType, PaymentStatusType, SaleModeType } from '../sale.entity';
 
 export class CreateSaleDto {
   @IsString()
@@ -12,6 +12,9 @@ export class CreateSaleDto {
 
   @IsDateString()
   saleDate!: string;
+
+  @IsEnum(['from_vehicle', 'from_godown'])
+  saleMode!: SaleModeType;
 
   @IsEnum(['eggs', 'meat', 'chicks', 'other'])
   productType!: SaleProductType;
