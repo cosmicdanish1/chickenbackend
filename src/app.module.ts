@@ -51,7 +51,7 @@ import { GodownExpense } from './godown/godown-expense.entity';
               rejectUnauthorized: false
             },
             entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
-            synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
+            synchronize: false, // NEVER sync in production
             logging: config.get<boolean>('DB_LOGGING', false),
           };
         }
@@ -65,7 +65,7 @@ import { GodownExpense } from './godown/godown-expense.entity';
           password: config.get<string>('DB_PASSWORD', 'postgres'),
           database: config.get<string>('DB_NAME', 'poultry'),
           entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
-          synchronize: config.get<boolean>('DB_SYNCHRONIZE', false),
+          synchronize: false, // NEVER sync in production
           logging: config.get<boolean>('DB_LOGGING', false),
         };
       },
