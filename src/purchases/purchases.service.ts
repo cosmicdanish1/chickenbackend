@@ -24,10 +24,25 @@ export class PurchasesService {
       throw new BadRequestException(`Purchase order with number ${createPurchaseOrderDto.orderNumber} already exists`);
     }
 
-    // Calculate total amount
+    // Calculate total amount from items
     const totalAmount = createPurchaseOrderDto.items.reduce((sum, item) => {
       return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
     }, 0);
+
+    // Calculate charges
+    const transportCharges = parseFloat(createPurchaseOrderDto.transportCharges || '0');
+    const loadingCharges = parseFloat(createPurchaseOrderDto.loadingCharges || '0');
+    const commission = parseFloat(createPurchaseOrderDto.commission || '0');
+    const otherCharges = parseFloat(createPurchaseOrderDto.otherCharges || '0');
+
+    // Calculate deductions
+    const weightShortage = parseFloat(createPurchaseOrderDto.weightShortage || '0');
+    const mortalityDeduction = parseFloat(createPurchaseOrderDto.mortalityDeduction || '0');
+    const otherDeduction = parseFloat(createPurchaseOrderDto.otherDeduction || '0');
+
+    // Calculate gross and net amounts
+    const grossAmount = totalAmount + transportCharges + loadingCharges + commission + otherCharges;
+    const netAmount = grossAmount - weightShortage - mortalityDeduction - otherDeduction;
 
     const purchaseOrder = this.purchaseOrderRepository.create({
       orderNumber: createPurchaseOrderDto.orderNumber,
@@ -37,6 +52,15 @@ export class PurchasesService {
       status: createPurchaseOrderDto.status || 'pending',
       notes: createPurchaseOrderDto.notes,
       totalAmount,
+      transportCharges,
+      loadingCharges,
+      commission,
+      otherCharges,
+      weightShortage,
+      mortalityDeduction,
+      otherDeduction,
+      grossAmount,
+      netAmount,
     });
 
     const savedOrder = await this.purchaseOrderRepository.save(purchaseOrder);
@@ -113,8 +137,9 @@ export class PurchasesService {
     }
 
     // If items are being updated, recalculate total
+    let totalAmount = purchaseOrder.totalAmount;
     if (updatePurchaseOrderDto.items) {
-      const totalAmount = updatePurchaseOrderDto.items.reduce((sum, item) => {
+      totalAmount = updatePurchaseOrderDto.items.reduce((sum, item) => {
         return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
       }, 0);
 
@@ -134,11 +159,52 @@ export class PurchasesService {
       );
 
       await this.purchaseOrderItemRepository.save(items);
-      Object.assign(updatePurchaseOrderDto, { totalAmount });
     }
 
-    Object.assign(purchaseOrder, updatePurchaseOrderDto);
-    purchaseOrder.updatedAt = new Date();
+    // Calculate charges
+    const transportCharges = updatePurchaseOrderDto.transportCharges 
+      ? parseFloat(updatePurchaseOrderDto.transportCharges) 
+      : purchaseOrder.transportCharges;
+    const loadingCharges = updatePurchaseOrderDto.loadingCharges 
+      ? parseFloat(updatePurchaseOrderDto.loadingCharges) 
+      : purchaseOrder.loadingCharges;
+    const commission = updatePurchaseOrderDto.commission 
+      ? parseFloat(updatePurchaseOrderDto.commission) 
+      : purchaseOrder.commission;
+    const otherCharges = updatePurchaseOrderDto.otherCharges 
+      ? parseFloat(updatePurchaseOrderDto.otherCharges) 
+      : purchaseOrder.otherCharges;
+
+    // Calculate deductions
+    const weightShortage = updatePurchaseOrderDto.weightShortage 
+      ? parseFloat(updatePurchaseOrderDto.weightShortage) 
+      : purchaseOrder.weightShortage;
+    const mortalityDeduction = updatePurchaseOrderDto.mortalityDeduction 
+      ? parseFloat(updatePurchaseOrderDto.mortalityDeduction) 
+      : purchaseOrder.mortalityDeduction;
+    const otherDeduction = updatePurchaseOrderDto.otherDeduction 
+      ? parseFloat(updatePurchaseOrderDto.otherDeduction) 
+      : purchaseOrder.otherDeduction;
+
+    // Calculate gross and net amounts
+    const grossAmount = totalAmount + transportCharges + loadingCharges + commission + otherCharges;
+    const netAmount = grossAmount - weightShortage - mortalityDeduction - otherDeduction;
+
+    Object.assign(purchaseOrder, {
+      ...updatePurchaseOrderDto,
+      totalAmount,
+      transportCharges,
+      loadingCharges,
+      commission,
+      otherCharges,
+      weightShortage,
+      mortalityDeduction,
+      otherDeduction,
+      grossAmount,
+      netAmount,
+      updatedAt: new Date(),
+    });
+
     await this.purchaseOrderRepository.save(purchaseOrder);
 
     return this.findOne(id);

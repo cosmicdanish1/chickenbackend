@@ -41,6 +41,34 @@ export class CreatePurchaseOrderDto {
   @IsString()
   notes?: string;
 
+  @IsOptional()
+  @IsString()
+  transportCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  loadingCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  commission?: string;
+
+  @IsOptional()
+  @IsString()
+  otherCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  weightShortage?: string;
+
+  @IsOptional()
+  @IsString()
+  mortalityDeduction?: string;
+
+  @IsOptional()
+  @IsString()
+  otherDeduction?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePurchaseOrderItemDto)
