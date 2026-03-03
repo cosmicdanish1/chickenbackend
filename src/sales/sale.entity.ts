@@ -48,6 +48,33 @@ export class Sale {
   @Column({ name: 'total_amount', type: 'numeric', precision: 14, scale: 2 })
   totalAmount!: number;
 
+  @Column({ name: 'transport_charges', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  transportCharges!: number;
+
+  @Column({ name: 'loading_charges', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  loadingCharges!: number;
+
+  @Column({ name: 'commission', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  commission!: number;
+
+  @Column({ name: 'other_charges', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  otherCharges!: number;
+
+  @Column({ name: 'weight_shortage', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  weightShortage!: number;
+
+  @Column({ name: 'mortality_deduction', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  mortalityDeduction!: number;
+
+  @Column({ name: 'other_deduction', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  otherDeduction!: number;
+
+  @Column({ name: 'gross_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  grossAmount!: number;
+
+  @Column({ name: 'net_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  netAmount!: number;
+
   @Column({
     name: 'payment_status',
     type: 'enum',

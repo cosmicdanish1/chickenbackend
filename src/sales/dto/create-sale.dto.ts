@@ -40,6 +40,34 @@ export class CreateSaleDto {
 
   @IsOptional()
   @IsString()
+  transportCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  loadingCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  commission?: string;
+
+  @IsOptional()
+  @IsString()
+  otherCharges?: string;
+
+  @IsOptional()
+  @IsString()
+  weightShortage?: string;
+
+  @IsOptional()
+  @IsString()
+  mortalityDeduction?: string;
+
+  @IsOptional()
+  @IsString()
+  otherDeduction?: string;
+
+  @IsOptional()
+  @IsString()
   notes?: string;
 
   @IsOptional()
