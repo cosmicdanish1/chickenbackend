@@ -45,3 +45,6 @@ coverage/
 
 # TypeScript
 *.tsbuildinfo
+
+# DevContext - AI coding context
+.devctx/
