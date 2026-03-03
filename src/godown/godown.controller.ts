@@ -8,22 +8,71 @@ export class GodownController {
   // Inward Entries
   @Post('inward')
   createInward(@Body() data: any) {
-    return this.godownService.createInward(data);
+    // Transform frontend field names to match database schema
+    const transformed = {
+      entryDate: data.entryDate,
+      supplierName: data.farmerName,
+      vehicleId: data.vehicleNumber,
+      numberOfBirds: data.quantity,
+      ratePerKg: data.rate,
+      totalAmount: data.totalAmount,
+      notes: data.notes,
+    };
+    return this.godownService.createInward(transformed);
   }
 
   @Get('inward')
-  findAllInward() {
-    return this.godownService.findAllInward();
+  async findAllInward() {
+    const entries = await this.godownService.findAllInward();
+    // Transform database field names to match frontend expectations
+    return entries.map(entry => ({
+      id: entry.id,
+      entryDate: entry.entryDate,
+      farmerName: entry.supplierName,
+      vehicleNumber: entry.vehicleId,
+      quantity: entry.numberOfBirds,
+      unit: 'birds',
+      rate: entry.ratePerKg,
+      totalAmount: entry.totalAmount,
+      notes: entry.notes,
+      createdAt: entry.createdAt,
+      updatedAt: entry.updatedAt,
+    }));
   }
 
   @Get('inward/:id')
-  findOneInward(@Param('id') id: string) {
-    return this.godownService.findOneInward(id);
+  async findOneInward(@Param('id') id: string) {
+    const entry = await this.godownService.findOneInward(id);
+    if (!entry) return null;
+    // Transform database field names to match frontend expectations
+    return {
+      id: entry.id,
+      entryDate: entry.entryDate,
+      farmerName: entry.supplierName,
+      vehicleNumber: entry.vehicleId,
+      quantity: entry.numberOfBirds,
+      unit: 'birds',
+      rate: entry.ratePerKg,
+      totalAmount: entry.totalAmount,
+      notes: entry.notes,
+      createdAt: entry.createdAt,
+      updatedAt: entry.updatedAt,
+    };
   }
 
   @Patch('inward/:id')
   updateInward(@Param('id') id: string, @Body() data: any) {
-    return this.godownService.updateInward(id, data);
+    // Transform frontend field names to match database schema
+    const transformed = {
+      entryDate: data.entryDate,
+      supplierName: data.farmerName,
+      vehicleId: data.vehicleNumber,
+      numberOfBirds: data.quantity,
+      ratePerKg: data.rate,
+      totalAmount: data.totalAmount,
+      notes: data.notes,
+    };
+    return this.godownService.updateInward(id, transformed);
   }
 
   @Delete('inward/:id')
