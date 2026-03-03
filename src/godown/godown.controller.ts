@@ -12,7 +12,7 @@ export class GodownController {
     const transformed = {
       entryDate: data.entryDate,
       supplierName: data.farmerName,
-      vehicleId: data.vehicleNumber ? null : null, // vehicleNumber is a string, but DB expects ID - set to null for now
+      vehicleId: undefined, // vehicleNumber is a string, but DB expects ID - set to undefined
       numberOfBirds: data.quantity,
       ratePerKg: data.rate,
       totalAmount: data.totalAmount,
@@ -66,7 +66,7 @@ export class GodownController {
     const transformed = {
       entryDate: data.entryDate,
       supplierName: data.farmerName,
-      vehicleId: data.vehicleNumber ? null : null, // vehicleNumber is a string, but DB expects ID - set to null for now
+      vehicleId: undefined, // vehicleNumber is a string, but DB expects ID - set to undefined
       numberOfBirds: data.quantity,
       ratePerKg: data.rate,
       totalAmount: data.totalAmount,
