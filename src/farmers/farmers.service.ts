@@ -17,9 +17,44 @@ export class FarmersService {
     return this.farmerRepository.save(farmer);
   }
 
-  async findAll(): Promise<Farmer[]> {
+  async findAll(page: number = 1, limit: number = 100, search?: string, status?: string) {
+    const query = this.farmerRepository.createQueryBuilder('farmer');
+
+    // Search filter
+    if (search) {
+      query.where(
+        '(farmer.name ILIKE :search OR farmer.phone ILIKE :search OR farmer.email ILIKE :search OR farmer.address ILIKE :search)',
+        { search: `%${search}%` }
+      );
+    }
+
+    // Status filter
+    if (status) {
+      query.andWhere('farmer.status = :status', { status });
+    }
+
+    // Pagination
+    const skip = (page - 1) * limit;
+    query.skip(skip).take(limit);
+
+    // Order by created date
+    query.orderBy('farmer.createdAt', 'DESC');
+
+    const [data, total] = await query.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
+  }
+
+  async findActive(): Promise<Farmer[]> {
     return this.farmerRepository.find({
-      order: { createdAt: 'DESC' },
+      where: { status: 'active' },
+      order: { name: 'ASC' },
     });
   }
 

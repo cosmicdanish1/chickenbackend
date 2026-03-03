@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import { FarmersService } from './farmers.service';
 import { CreateFarmerDto } from './dto/create-farmer.dto';
@@ -24,8 +25,20 @@ export class FarmersController {
   }
 
   @Get()
-  findAll() {
-    return this.farmersService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+  ) {
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 100;
+    return this.farmersService.findAll(pageNum, limitNum, search, status);
+  }
+
+  @Get('active/list')
+  findActive() {
+    return this.farmersService.findActive();
   }
 
   @Get(':id')
