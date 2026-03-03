@@ -5,6 +5,10 @@ export class CreateExpenseDto {
   @IsDateString()
   expenseDate!: string;
 
+  @IsOptional()
+  @IsString()
+  expenseOwner?: string;
+
   @IsEnum(['feed', 'labor', 'medicine', 'utilities', 'equipment', 'maintenance', 'transportation', 'other'])
   category!: ExpenseCategoryType;
 

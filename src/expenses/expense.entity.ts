@@ -11,6 +11,9 @@ export class Expense {
   @Column({ name: 'expense_date', type: 'date' })
   expenseDate!: string;
 
+  @Column({ name: 'expense_owner', type: 'varchar', length: 150, nullable: true })
+  expenseOwner?: string;
+
   @Column({
     type: 'enum',
     enum: ['feed', 'labor', 'medicine', 'utilities', 'equipment', 'maintenance', 'transportation', 'other'],
