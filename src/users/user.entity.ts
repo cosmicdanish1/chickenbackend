@@ -14,6 +14,9 @@ export class User {
   @Column({ type: 'citext', unique: true })
   email!: string;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  phone?: string;
+
   @Column({ name: 'password_hash', type: 'text' })
   passwordHash!: string;
 
@@ -38,6 +41,9 @@ export class User {
 
   @Column({ name: 'last_login', type: 'timestamptz', nullable: true })
   lastLogin?: Date | null;
+
+  @Column({ type: 'text', nullable: true })
+  notes?: string;
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
   createdAt!: Date;

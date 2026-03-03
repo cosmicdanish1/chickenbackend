@@ -11,6 +11,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   email!: string;
 
+  @IsOptional()
+  @IsString()
+  @Length(0, 20)
+  phone?: string;
+
   @IsString()
   @MinLength(6)
   password!: string;
@@ -22,5 +27,9 @@ export class CreateUserDto {
   @IsOptional()
   @IsEnum(['active', 'inactive'] as const)
   status?: UserStatus;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
