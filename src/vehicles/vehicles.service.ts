@@ -16,6 +16,13 @@ export class VehiclesService {
     return this.vehiclesRepository.find({ order: { driverName: 'ASC' } });
   }
 
+  async findActive(): Promise<Vehicle[]> {
+    return this.vehiclesRepository.find({
+      where: { status: 'active' },
+      order: { vehicleNumber: 'ASC' },
+    });
+  }
+
   async findOne(id: string): Promise<Vehicle> {
     const vehicle = await this.vehiclesRepository.findOne({ where: { id } });
     if (!vehicle) {

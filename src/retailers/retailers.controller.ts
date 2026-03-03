@@ -28,6 +28,11 @@ export class RetailersController {
     return this.retailersService.findAll();
   }
 
+  @Get('active/list')
+  findActive() {
+    return this.retailersService.findActive();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.retailersService.findOne(id);

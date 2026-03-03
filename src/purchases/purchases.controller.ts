@@ -31,6 +31,11 @@ export class PurchasesController {
     return this.purchasesService.findAll(startDate, endDate, supplier, status);
   }
 
+  @Get('invoices/list')
+  getInvoiceList() {
+    return this.purchasesService.getInvoiceList();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.purchasesService.findOne(id);

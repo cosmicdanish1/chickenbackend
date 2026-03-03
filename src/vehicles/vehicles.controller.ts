@@ -15,6 +15,11 @@ export class VehiclesController {
     return this.vehiclesService.findAll();
   }
 
+  @Get('active/list')
+  async findActive(): Promise<Vehicle[]> {
+    return this.vehiclesService.findActive();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Vehicle> {
     return this.vehiclesService.findOne(id);

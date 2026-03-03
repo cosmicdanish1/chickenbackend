@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Between } from 'typeorm';
+import { Repository } from 'typeorm';
 import { PurchaseOrder } from './entities/purchase-order.entity';
 import { PurchaseOrderItem } from './entities/purchase-order-item.entity';
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto';
@@ -156,4 +156,20 @@ export class PurchasesService {
     await this.purchaseOrderRepository.save(purchaseOrder);
     return purchaseOrder;
   }
+
+  async getInvoiceList(): Promise<Array<{ id: string; orderNumber: string; orderDate: string; supplierName: string }>> {
+    const orders = await this.purchaseOrderRepository
+      .createQueryBuilder('po')
+      .select(['po.id', 'po.orderNumber', 'po.orderDate', 'po.supplierName'])
+      .orderBy('po.orderDate', 'DESC')
+      .getMany();
+
+    return orders.map(order => ({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      orderDate: order.orderDate,
+      supplierName: order.supplierName,
+    }));
+  }
+
 }

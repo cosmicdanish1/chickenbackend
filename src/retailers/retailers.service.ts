@@ -23,6 +23,13 @@ export class RetailersService {
     });
   }
 
+  async findActive(): Promise<Retailer[]> {
+    return this.retailerRepository.find({
+      where: { status: 'active' },
+      order: { name: 'ASC' },
+    });
+  }
+
   async findOne(id: string): Promise<Retailer> {
     const retailer = await this.retailerRepository.findOne({ where: { id } });
     if (!retailer) {
