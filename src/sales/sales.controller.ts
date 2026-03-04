@@ -32,6 +32,11 @@ export class SalesController {
     return this.salesService.findAll(startDate, endDate, customer, productType, paymentStatus);
   }
 
+  @Get('invoices/list')
+  getInvoiceList() {
+    return this.salesService.getInvoiceList();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.salesService.findOne(id);

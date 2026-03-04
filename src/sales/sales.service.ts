@@ -101,6 +101,22 @@ export class SalesService {
     return query.getMany();
   }
 
+  async getInvoiceList(): Promise<Array<{ id: string; invoiceNumber: string; saleDate: string; customerName: string }>> {
+    const sales = await this.saleRepository
+      .createQueryBuilder('sale')
+      .select(['sale.id', 'sale.invoiceNumber', 'sale.saleDate', 'sale.customerName'])
+      .orderBy('sale.saleDate', 'DESC')
+      .limit(100)
+      .getMany();
+
+    return sales.map(sale => ({
+      id: sale.id,
+      invoiceNumber: sale.invoiceNumber,
+      saleDate: sale.saleDate,
+      customerName: sale.customerName,
+    }));
+  }
+
   async findOne(id: string): Promise<Sale> {
     const sale = await this.saleRepository.findOne({
       where: { id },
