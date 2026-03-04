@@ -191,7 +191,7 @@ export class PurchasesService {
 
     // If items are being updated, recalculate total
     let totalAmount = purchaseOrder.totalAmount;
-    if (updatePurchaseOrderDto.items) {
+    if (updatePurchaseOrderDto.items && updatePurchaseOrderDto.items.length > 0) {
       totalAmount = updatePurchaseOrderDto.items.reduce((sum, item) => {
         return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
       }, 0);
@@ -214,28 +214,28 @@ export class PurchasesService {
       await this.purchaseOrderItemRepository.save(items);
     }
 
-    // Calculate charges
-    const transportCharges = updatePurchaseOrderDto.transportCharges 
+    // Calculate charges (use existing values if not provided)
+    const transportCharges = updatePurchaseOrderDto.transportCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.transportCharges) 
       : purchaseOrder.transportCharges;
-    const loadingCharges = updatePurchaseOrderDto.loadingCharges 
+    const loadingCharges = updatePurchaseOrderDto.loadingCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.loadingCharges) 
       : purchaseOrder.loadingCharges;
-    const commission = updatePurchaseOrderDto.commission 
+    const commission = updatePurchaseOrderDto.commission !== undefined
       ? parseFloat(updatePurchaseOrderDto.commission) 
       : purchaseOrder.commission;
-    const otherCharges = updatePurchaseOrderDto.otherCharges 
+    const otherCharges = updatePurchaseOrderDto.otherCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.otherCharges) 
       : purchaseOrder.otherCharges;
 
-    // Calculate deductions
-    const weightShortage = updatePurchaseOrderDto.weightShortage 
+    // Calculate deductions (use existing values if not provided)
+    const weightShortage = updatePurchaseOrderDto.weightShortage !== undefined
       ? parseFloat(updatePurchaseOrderDto.weightShortage) 
       : purchaseOrder.weightShortage;
-    const mortalityDeduction = updatePurchaseOrderDto.mortalityDeduction 
+    const mortalityDeduction = updatePurchaseOrderDto.mortalityDeduction !== undefined
       ? parseFloat(updatePurchaseOrderDto.mortalityDeduction) 
       : purchaseOrder.mortalityDeduction;
-    const otherDeduction = updatePurchaseOrderDto.otherDeduction 
+    const otherDeduction = updatePurchaseOrderDto.otherDeduction !== undefined
       ? parseFloat(updatePurchaseOrderDto.otherDeduction) 
       : purchaseOrder.otherDeduction;
 
@@ -243,20 +243,39 @@ export class PurchasesService {
     const grossAmount = totalAmount + transportCharges + loadingCharges + commission + otherCharges;
     const netAmount = grossAmount - weightShortage - mortalityDeduction - otherDeduction;
 
-    Object.assign(purchaseOrder, {
-      ...updatePurchaseOrderDto,
-      totalAmount,
-      transportCharges,
-      loadingCharges,
-      commission,
-      otherCharges,
-      weightShortage,
-      mortalityDeduction,
-      otherDeduction,
-      grossAmount,
-      netAmount,
-      updatedAt: new Date(),
-    });
+    // Update the purchase order
+    Object.assign(purchaseOrder, updatePurchaseOrderDto);
+    
+    // Set calculated values
+    purchaseOrder.totalAmount = totalAmount;
+    purchaseOrder.transportCharges = transportCharges;
+    purchaseOrder.loadingCharges = loadingCharges;
+    purchaseOrder.commission = commission;
+    purchaseOrder.otherCharges = otherCharges;
+    purchaseOrder.weightShortage = weightShortage;
+    purchaseOrder.mortalityDeduction = mortalityDeduction;
+    purchaseOrder.otherDeduction = otherDeduction;
+    purchaseOrder.grossAmount = grossAmount;
+    purchaseOrder.netAmount = netAmount;
+    purchaseOrder.updatedAt = new Date();
+
+    // Convert string values to numbers for numeric fields
+    if (updatePurchaseOrderDto.totalWeight) {
+      purchaseOrder.totalWeight = parseFloat(updatePurchaseOrderDto.totalWeight);
+    }
+    if (updatePurchaseOrderDto.ratePerKg) {
+      purchaseOrder.ratePerKg = parseFloat(updatePurchaseOrderDto.ratePerKg);
+    }
+    if (updatePurchaseOrderDto.advancePaid) {
+      purchaseOrder.advancePaid = parseFloat(updatePurchaseOrderDto.advancePaid);
+    }
+    if (updatePurchaseOrderDto.totalPaymentMade) {
+      purchaseOrder.totalPaymentMade = parseFloat(updatePurchaseOrderDto.totalPaymentMade);
+    }
+
+    // Calculate balance amount
+    purchaseOrder.balanceAmount = netAmount - purchaseOrder.totalPaymentMade;
+    purchaseOrder.outstandingPayment = netAmount - purchaseOrder.advancePaid;
 
     await this.purchaseOrderRepository.save(purchaseOrder);
 
