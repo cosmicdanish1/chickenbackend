@@ -1,4 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 export type UserRole = 'admin' | 'manager' | 'staff';
 export type UserStatus = 'active' | 'inactive';
@@ -17,6 +18,7 @@ export class User {
   @Column({ type: 'varchar', length: 20, nullable: true })
   phone?: string;
 
+  @Exclude()
   @Column({ name: 'password_hash', type: 'text' })
   passwordHash!: string;
 
