@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsDateString, IsEnum, MaxLength, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsEnum, MaxLength } from 'class-validator';
 import { SaleProductType, PaymentStatusType, SaleModeType } from '../sale.entity';
 
 export class CreateSaleDto {
@@ -16,22 +16,19 @@ export class CreateSaleDto {
   @IsEnum(['from_vehicle', 'from_godown'])
   saleMode!: SaleModeType;
 
-  @IsOptional()
   @IsEnum(['eggs', 'meat', 'chicks', 'other'])
-  productType?: SaleProductType;
+  productType!: SaleProductType;
 
-  @IsOptional()
   @IsString()
-  quantity?: string; // Using string to handle decimal input
+  quantity!: string; // Using string to handle decimal input
 
   @IsOptional()
   @IsString()
   @MaxLength(20)
   unit?: string;
 
-  @IsOptional()
   @IsString()
-  unitPrice?: string; // Using string to handle decimal input
+  unitPrice!: string; // Using string to handle decimal input
 
   @IsOptional()
   @IsEnum(['paid', 'pending', 'partial'])
@@ -42,36 +39,32 @@ export class CreateSaleDto {
   amountReceived?: string; // Using string to handle decimal input
 
   @IsOptional()
-  @IsNumber()
-  transportCharges?: number;
+  @IsString()
+  transportCharges?: string;
 
   @IsOptional()
-  @IsNumber()
-  loadingCharges?: number;
+  @IsString()
+  loadingCharges?: string;
 
   @IsOptional()
-  @IsNumber()
-  commission?: number;
+  @IsString()
+  commission?: string;
 
   @IsOptional()
-  @IsNumber()
-  otherCharges?: number;
+  @IsString()
+  otherCharges?: string;
 
   @IsOptional()
-  @IsNumber()
-  deductions?: number;
+  @IsString()
+  weightShortage?: string;
 
   @IsOptional()
-  @IsNumber()
-  weightShortage?: number;
+  @IsString()
+  mortalityDeduction?: string;
 
   @IsOptional()
-  @IsNumber()
-  mortalityDeduction?: number;
-
-  @IsOptional()
-  @IsNumber()
-  otherDeduction?: number;
+  @IsString()
+  otherDeduction?: string;
 
   @IsOptional()
   @IsString()
@@ -80,56 +73,4 @@ export class CreateSaleDto {
   @IsOptional()
   @IsString()
   retailerId?: string;
-
-  @IsOptional()
-  @IsString()
-  vehicleId?: string;
-
-  @IsOptional()
-  @IsString()
-  birdType?: string;
-
-  @IsOptional()
-  @IsNumber()
-  numberOfCages?: number;
-
-  @IsOptional()
-  @IsNumber()
-  numberOfBirds?: number;
-
-  @IsOptional()
-  @IsNumber()
-  ratePerKg?: number;
-
-  @IsOptional()
-  @IsNumber()
-  averageWeight?: number;
-
-  @IsOptional()
-  @IsNumber()
-  totalWeight?: number;
-
-  @IsOptional()
-  @IsNumber()
-  totalAmount?: number;
-
-  @IsOptional()
-  @IsNumber()
-  advancePaid?: number;
-
-  @IsOptional()
-  @IsNumber()
-  creditBalance?: number;
-
-  @IsOptional()
-  @IsString()
-  paymentMode?: string;
-
-  @IsOptional()
-  @IsNumber()
-  totalPaymentReceived?: number;
-
-  @IsOptional()
-  @IsNumber()
-  balanceAmount?: number;
 }
