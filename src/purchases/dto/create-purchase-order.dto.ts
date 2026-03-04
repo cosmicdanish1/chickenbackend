@@ -137,6 +137,8 @@ export class CreatePurchaseOrderDto {
 
   @IsOptional()
   @IsArray()
+  @IsOptional()
+  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePurchaseOrderItemDto)
   items?: CreatePurchaseOrderItemDto[];
