@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -41,6 +41,11 @@ export class UsersController {
   @Patch(':id/activate')
   async activate(@Param('id') id: string): Promise<User> {
     return this.usersService.activate(id);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<void> {
+    return this.usersService.remove(id);
   }
 
   @Get('statistics/summary')

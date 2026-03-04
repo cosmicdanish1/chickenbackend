@@ -135,5 +135,10 @@ export class UsersService {
   async updateLastLogin(id: string): Promise<void> {
     await this.usersRepository.update(id, { lastLogin: new Date() });
   }
+
+  async remove(id: string): Promise<void> {
+    const user = await this.findOne(id);
+    await this.usersRepository.remove(user);
+  }
 }
 
