@@ -30,6 +30,9 @@ import { GodownInwardEntry } from './godown/godown-inward.entity';
 import { GodownSale } from './godown/godown-sale.entity';
 import { GodownMortality } from './godown/godown-mortality.entity';
 import { GodownExpense } from './godown/godown-expense.entity';
+import { PermissionsModule } from './permissions/permissions.module';
+import { RolePermission } from './permissions/entities/role-permission.entity';
+import { UserPermission } from './permissions/entities/user-permission.entity';
 
 @Module({
   imports: [
@@ -50,7 +53,7 @@ import { GodownExpense } from './godown/godown-expense.entity';
             ssl: {
               rejectUnauthorized: false
             },
-            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
+            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission],
             synchronize: false, // NEVER sync in production
             logging: config.get<boolean>('DB_LOGGING', false),
           };
@@ -64,7 +67,7 @@ import { GodownExpense } from './godown/godown-expense.entity';
           username: config.get<string>('DB_USERNAME', 'postgres'),
           password: config.get<string>('DB_PASSWORD', 'postgres'),
           database: config.get<string>('DB_NAME', 'poultry'),
-          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense],
+          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission],
           synchronize: false, // NEVER sync in production
           logging: config.get<boolean>('DB_LOGGING', false),
         };
@@ -84,6 +87,7 @@ import { GodownExpense } from './godown/godown-expense.entity';
     SettingsModule,
     AuditModule,
     GodownModule,
+    PermissionsModule,
   ],
 })
 export class AppModule {}
