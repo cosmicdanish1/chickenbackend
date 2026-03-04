@@ -192,7 +192,9 @@ export class PurchasesService {
     }
 
     // If items are being updated, recalculate total
-    let totalAmount = purchaseOrder.totalAmount;
+    let totalAmount = typeof purchaseOrder.totalAmount === 'string' 
+      ? parseFloat(purchaseOrder.totalAmount) 
+      : purchaseOrder.totalAmount;
     if (updatePurchaseOrderDto.items && updatePurchaseOrderDto.items.length > 0) {
       totalAmount = updatePurchaseOrderDto.items.reduce((sum, item) => {
         return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
@@ -216,30 +218,30 @@ export class PurchasesService {
       await this.purchaseOrderItemRepository.save(items);
     }
 
-    // Calculate charges (use existing values if not provided)
+    // Calculate charges (use existing values if not provided, handle string types)
     const transportCharges = updatePurchaseOrderDto.transportCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.transportCharges) 
-      : purchaseOrder.transportCharges;
+      : (typeof purchaseOrder.transportCharges === 'string' ? parseFloat(purchaseOrder.transportCharges) : purchaseOrder.transportCharges);
     const loadingCharges = updatePurchaseOrderDto.loadingCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.loadingCharges) 
-      : purchaseOrder.loadingCharges;
+      : (typeof purchaseOrder.loadingCharges === 'string' ? parseFloat(purchaseOrder.loadingCharges) : purchaseOrder.loadingCharges);
     const commission = updatePurchaseOrderDto.commission !== undefined
       ? parseFloat(updatePurchaseOrderDto.commission) 
-      : purchaseOrder.commission;
+      : (typeof purchaseOrder.commission === 'string' ? parseFloat(purchaseOrder.commission) : purchaseOrder.commission);
     const otherCharges = updatePurchaseOrderDto.otherCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.otherCharges) 
-      : purchaseOrder.otherCharges;
+      : (typeof purchaseOrder.otherCharges === 'string' ? parseFloat(purchaseOrder.otherCharges) : purchaseOrder.otherCharges);
 
-    // Calculate deductions (use existing values if not provided)
+    // Calculate deductions (use existing values if not provided, handle string types)
     const weightShortage = updatePurchaseOrderDto.weightShortage !== undefined
       ? parseFloat(updatePurchaseOrderDto.weightShortage) 
-      : purchaseOrder.weightShortage;
+      : (typeof purchaseOrder.weightShortage === 'string' ? parseFloat(purchaseOrder.weightShortage) : purchaseOrder.weightShortage);
     const mortalityDeduction = updatePurchaseOrderDto.mortalityDeduction !== undefined
       ? parseFloat(updatePurchaseOrderDto.mortalityDeduction) 
-      : purchaseOrder.mortalityDeduction;
+      : (typeof purchaseOrder.mortalityDeduction === 'string' ? parseFloat(purchaseOrder.mortalityDeduction) : purchaseOrder.mortalityDeduction);
     const otherDeduction = updatePurchaseOrderDto.otherDeduction !== undefined
       ? parseFloat(updatePurchaseOrderDto.otherDeduction) 
-      : purchaseOrder.otherDeduction;
+      : (typeof purchaseOrder.otherDeduction === 'string' ? parseFloat(purchaseOrder.otherDeduction) : purchaseOrder.otherDeduction);
 
     // Calculate gross and net amounts
     const grossAmount = totalAmount + transportCharges + loadingCharges + commission + otherCharges;
