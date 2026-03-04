@@ -35,7 +35,7 @@ export class PurchasesService {
       totalWeight = createPurchaseOrderDto.cages.reduce((sum, cage) => sum + cage.cageWeight, 0);
       const ratePerKg = parseFloat(createPurchaseOrderDto.ratePerKg || '0');
       totalAmount = totalWeight * ratePerKg;
-    } else {
+    } else if (createPurchaseOrderDto.items && createPurchaseOrderDto.items.length > 0) {
       // Calculate from items if no cages
       totalAmount = createPurchaseOrderDto.items.reduce((sum, item) => {
         return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
@@ -102,19 +102,21 @@ export class PurchasesService {
 
     const savedOrder = await this.purchaseOrderRepository.save(purchaseOrder);
 
-    // Create items
-    const items = createPurchaseOrderDto.items.map(item => 
-      this.purchaseOrderItemRepository.create({
-        description: item.description,
-        quantity: parseFloat(item.quantity),
-        unit: item.unit,
-        unitCost: parseFloat(item.unitCost),
-        lineTotal: parseFloat(item.quantity) * parseFloat(item.unitCost),
-        purchaseOrderId: savedOrder.id,
-      })
-    );
+    // Create items if provided
+    if (createPurchaseOrderDto.items && createPurchaseOrderDto.items.length > 0) {
+      const items = createPurchaseOrderDto.items.map(item => 
+        this.purchaseOrderItemRepository.create({
+          description: item.description,
+          quantity: parseFloat(item.quantity),
+          unit: item.unit,
+          unitCost: parseFloat(item.unitCost),
+          lineTotal: parseFloat(item.quantity) * parseFloat(item.unitCost),
+          purchaseOrderId: savedOrder.id,
+        })
+      );
 
-    await this.purchaseOrderItemRepository.save(items);
+      await this.purchaseOrderItemRepository.save(items);
+    }
 
     // Create cages if provided
     if (createPurchaseOrderDto.cages && createPurchaseOrderDto.cages.length > 0) {
