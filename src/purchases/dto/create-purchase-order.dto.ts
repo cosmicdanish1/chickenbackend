@@ -135,10 +135,11 @@ export class CreatePurchaseOrderDto {
   @IsString()
   totalPaymentMade?: string;
 
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePurchaseOrderItemDto)
-  items!: CreatePurchaseOrderItemDto[];
+  items?: CreatePurchaseOrderItemDto[];
 
   @IsOptional()
   @IsArray()
