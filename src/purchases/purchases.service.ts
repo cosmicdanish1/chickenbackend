@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PurchaseOrder } from './entities/purchase-order.entity';
 import { PurchaseOrderItem } from './entities/purchase-order-item.entity';
+import { PurchaseOrderCage } from './entities/purchase-order-cage.entity';
 import { CreatePurchaseOrderDto } from './dto/create-purchase-order.dto';
 import { UpdatePurchaseOrderDto } from './dto/update-purchase-order.dto';
 
@@ -13,6 +14,8 @@ export class PurchasesService {
     private readonly purchaseOrderRepository: Repository<PurchaseOrder>,
     @InjectRepository(PurchaseOrderItem)
     private readonly purchaseOrderItemRepository: Repository<PurchaseOrderItem>,
+    @InjectRepository(PurchaseOrderCage)
+    private readonly purchaseOrderCageRepository: Repository<PurchaseOrderCage>,
   ) {}
 
   async create(createPurchaseOrderDto: CreatePurchaseOrderDto): Promise<PurchaseOrder> {
@@ -24,10 +27,20 @@ export class PurchasesService {
       throw new BadRequestException(`Purchase order with number ${createPurchaseOrderDto.orderNumber} already exists`);
     }
 
-    // Calculate total amount from items
-    const totalAmount = createPurchaseOrderDto.items.reduce((sum, item) => {
-      return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
-    }, 0);
+    // Calculate total weight and amount from cages if provided
+    let totalWeight = 0;
+    let totalAmount = 0;
+    
+    if (createPurchaseOrderDto.cages && createPurchaseOrderDto.cages.length > 0) {
+      totalWeight = createPurchaseOrderDto.cages.reduce((sum, cage) => sum + cage.cageWeight, 0);
+      const ratePerKg = parseFloat(createPurchaseOrderDto.ratePerKg || '0');
+      totalAmount = totalWeight * ratePerKg;
+    } else {
+      // Calculate from items if no cages
+      totalAmount = createPurchaseOrderDto.items.reduce((sum, item) => {
+        return sum + (parseFloat(item.quantity) * parseFloat(item.unitCost));
+      }, 0);
+    }
 
     // Calculate charges
     const transportCharges = parseFloat(createPurchaseOrderDto.transportCharges || '0');
@@ -44,6 +57,12 @@ export class PurchasesService {
     const grossAmount = totalAmount + transportCharges + loadingCharges + commission + otherCharges;
     const netAmount = grossAmount - weightShortage - mortalityDeduction - otherDeduction;
 
+    // Calculate payment amounts
+    const advancePaid = parseFloat(createPurchaseOrderDto.advancePaid || '0');
+    const totalPaymentMade = parseFloat(createPurchaseOrderDto.totalPaymentMade || '0');
+    const outstandingPayment = netAmount - advancePaid;
+    const balanceAmount = netAmount - totalPaymentMade;
+
     const purchaseOrder = this.purchaseOrderRepository.create({
       orderNumber: createPurchaseOrderDto.orderNumber,
       supplierName: createPurchaseOrderDto.supplierName,
@@ -51,6 +70,17 @@ export class PurchasesService {
       dueDate: createPurchaseOrderDto.dueDate,
       status: createPurchaseOrderDto.status || 'pending',
       notes: createPurchaseOrderDto.notes,
+      // Farmer integration
+      farmerId: createPurchaseOrderDto.farmerId,
+      farmerMobile: createPurchaseOrderDto.farmerMobile,
+      farmLocation: createPurchaseOrderDto.farmLocation,
+      // Vehicle integration
+      vehicleId: createPurchaseOrderDto.vehicleId,
+      // Bird details
+      birdType: createPurchaseOrderDto.birdType,
+      totalWeight,
+      ratePerKg: parseFloat(createPurchaseOrderDto.ratePerKg || '0'),
+      // Amounts
       totalAmount,
       transportCharges,
       loadingCharges,
@@ -61,6 +91,13 @@ export class PurchasesService {
       otherDeduction,
       grossAmount,
       netAmount,
+      // Payment tracking
+      purchasePaymentStatus: createPurchaseOrderDto.purchasePaymentStatus || 'pending',
+      advancePaid,
+      outstandingPayment,
+      paymentMode: createPurchaseOrderDto.paymentMode,
+      totalPaymentMade,
+      balanceAmount,
     });
 
     const savedOrder = await this.purchaseOrderRepository.save(purchaseOrder);
@@ -79,6 +116,21 @@ export class PurchasesService {
 
     await this.purchaseOrderItemRepository.save(items);
 
+    // Create cages if provided
+    if (createPurchaseOrderDto.cages && createPurchaseOrderDto.cages.length > 0) {
+      const cages = createPurchaseOrderDto.cages.map(cage =>
+        this.purchaseOrderCageRepository.create({
+          cageId: cage.cageId,
+          birdType: cage.birdType,
+          numberOfBirds: cage.numberOfBirds,
+          cageWeight: cage.cageWeight,
+          purchaseOrderId: savedOrder.id,
+        })
+      );
+
+      await this.purchaseOrderCageRepository.save(cages);
+    }
+
     return this.findOne(savedOrder.id);
   }
 
@@ -90,6 +142,7 @@ export class PurchasesService {
   ): Promise<PurchaseOrder[]> {
     const query = this.purchaseOrderRepository.createQueryBuilder('po')
       .leftJoinAndSelect('po.items', 'items')
+      .leftJoinAndSelect('po.cages', 'cages')
       .orderBy('po.orderDate', 'DESC');
 
     if (startDate && endDate) {
@@ -115,7 +168,7 @@ export class PurchasesService {
   async findOne(id: string): Promise<PurchaseOrder> {
     const purchaseOrder = await this.purchaseOrderRepository.findOne({
       where: { id },
-      relations: ['items'],
+      relations: ['items', 'cages'],
     });
     if (!purchaseOrder) {
       throw new NotFoundException(`Purchase order with ID ${id} not found`);

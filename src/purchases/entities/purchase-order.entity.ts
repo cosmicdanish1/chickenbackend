@@ -1,7 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { PurchaseOrderItem } from './purchase-order-item.entity';
+import { PurchaseOrderCage } from './purchase-order-cage.entity';
 
 export type PurchaseStatus = 'pending' | 'received' | 'cancelled';
+export type PurchasePaymentStatus = 'paid' | 'pending' | 'partial';
 
 @Entity({ name: 'purchase_orders' })
 export class PurchaseOrder {
@@ -27,6 +29,33 @@ export class PurchaseOrder {
     default: 'pending',
   })
   status!: PurchaseStatus;
+
+  // Farmer integration
+  @Column({ name: 'farmer_id', type: 'bigint', nullable: true })
+  farmerId?: string;
+
+  @Column({ name: 'farmer_mobile', type: 'varchar', length: 20, nullable: true })
+  farmerMobile?: string;
+
+  @Column({ name: 'farm_location', type: 'text', nullable: true })
+  farmLocation?: string;
+
+  // Vehicle integration
+  @Column({ name: 'vehicle_id', type: 'bigint', nullable: true })
+  vehicleId?: string;
+
+  // Bird details
+  @Column({ name: 'bird_type', type: 'varchar', length: 50, nullable: true })
+  birdType?: string;
+
+  @Column({ name: 'total_weight', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  totalWeight!: number;
+
+  @Column({ name: 'rate_per_kg', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  ratePerKg!: number;
+
+  @Column({ name: 'rate_per_kg', type: 'numeric', precision: 10, scale: 2, default: 0 })
+  ratePerKg!: number;
 
   @Column({ name: 'total_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
   totalAmount!: number;
@@ -58,11 +87,33 @@ export class PurchaseOrder {
   @Column({ name: 'net_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
   netAmount!: number;
 
+  // Payment tracking
+  @Column({ name: 'purchase_payment_status', type: 'varchar', length: 20, default: 'pending' })
+  purchasePaymentStatus!: PurchasePaymentStatus;
+
+  @Column({ name: 'advance_paid', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  advancePaid!: number;
+
+  @Column({ name: 'outstanding_payment', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  outstandingPayment!: number;
+
+  @Column({ name: 'payment_mode', type: 'varchar', length: 50, nullable: true })
+  paymentMode?: string;
+
+  @Column({ name: 'total_payment_made', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  totalPaymentMade!: number;
+
+  @Column({ name: 'balance_amount', type: 'numeric', precision: 14, scale: 2, default: 0 })
+  balanceAmount!: number;
+
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
   @OneToMany(() => PurchaseOrderItem, (item) => item.purchaseOrder, { cascade: true })
   items!: PurchaseOrderItem[];
+
+  @OneToMany(() => PurchaseOrderCage, (cage) => cage.purchaseOrder, { cascade: true })
+  cages!: PurchaseOrderCage[];
 
   @Column({ name: 'created_at', type: 'timestamptz', default: () => 'NOW()' })
   createdAt!: Date;

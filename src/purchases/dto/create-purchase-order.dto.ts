@@ -1,6 +1,6 @@
-import { IsString, IsOptional, IsDateString, IsArray, ValidateNested, MaxLength, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsArray, ValidateNested, MaxLength, IsEnum, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
-import { PurchaseStatus } from '../entities/purchase-order.entity';
+import { PurchaseStatus, PurchasePaymentStatus } from '../entities/purchase-order.entity';
 
 export class CreatePurchaseOrderItemDto {
   @IsString()
@@ -15,6 +15,24 @@ export class CreatePurchaseOrderItemDto {
 
   @IsString()
   unitCost!: string; // Using string to handle decimal input
+}
+
+export class CreatePurchaseOrderCageDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  cageId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  birdType?: string;
+
+  @IsNumber()
+  numberOfBirds!: number;
+
+  @IsNumber()
+  cageWeight!: number;
 }
 
 export class CreatePurchaseOrderDto {
@@ -36,6 +54,37 @@ export class CreatePurchaseOrderDto {
   @IsOptional()
   @IsEnum(['pending', 'received', 'cancelled'])
   status?: PurchaseStatus;
+
+  // Farmer integration
+  @IsOptional()
+  @IsString()
+  farmerId?: string;
+
+  @IsOptional()
+  @IsString()
+  farmerMobile?: string;
+
+  @IsOptional()
+  @IsString()
+  farmLocation?: string;
+
+  // Vehicle integration
+  @IsOptional()
+  @IsString()
+  vehicleId?: string;
+
+  // Bird details
+  @IsOptional()
+  @IsString()
+  birdType?: string;
+
+  @IsOptional()
+  @IsString()
+  totalWeight?: string;
+
+  @IsOptional()
+  @IsString()
+  ratePerKg?: string;
 
   @IsOptional()
   @IsString()
@@ -69,8 +118,31 @@ export class CreatePurchaseOrderDto {
   @IsString()
   otherDeduction?: string;
 
+  // Payment tracking
+  @IsOptional()
+  @IsEnum(['paid', 'pending', 'partial'])
+  purchasePaymentStatus?: PurchasePaymentStatus;
+
+  @IsOptional()
+  @IsString()
+  advancePaid?: string;
+
+  @IsOptional()
+  @IsString()
+  paymentMode?: string;
+
+  @IsOptional()
+  @IsString()
+  totalPaymentMade?: string;
+
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePurchaseOrderItemDto)
   items!: CreatePurchaseOrderItemDto[];
+
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreatePurchaseOrderCageDto)
+  cages?: CreatePurchaseOrderCageDto[];
 }
