@@ -273,9 +273,17 @@ export class PurchasesService {
       purchaseOrder.totalPaymentMade = parseFloat(updatePurchaseOrderDto.totalPaymentMade);
     }
 
+    // Ensure numeric values for calculations (handle both string and number types)
+    const totalPaymentMade = typeof purchaseOrder.totalPaymentMade === 'string' 
+      ? parseFloat(purchaseOrder.totalPaymentMade) 
+      : purchaseOrder.totalPaymentMade;
+    const advancePaid = typeof purchaseOrder.advancePaid === 'string'
+      ? parseFloat(purchaseOrder.advancePaid)
+      : purchaseOrder.advancePaid;
+
     // Calculate balance amount
-    purchaseOrder.balanceAmount = netAmount - purchaseOrder.totalPaymentMade;
-    purchaseOrder.outstandingPayment = netAmount - purchaseOrder.advancePaid;
+    purchaseOrder.balanceAmount = netAmount - totalPaymentMade;
+    purchaseOrder.outstandingPayment = netAmount - advancePaid;
 
     await this.purchaseOrderRepository.save(purchaseOrder);
 
