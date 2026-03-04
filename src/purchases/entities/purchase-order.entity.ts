@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { PurchaseOrderItem } from './purchase-order-item.entity';
 import { PurchaseOrderCage } from './purchase-order-cage.entity';
 
@@ -50,9 +50,6 @@ export class PurchaseOrder {
 
   @Column({ name: 'total_weight', type: 'numeric', precision: 10, scale: 2, default: 0 })
   totalWeight!: number;
-
-  @Column({ name: 'rate_per_kg', type: 'numeric', precision: 10, scale: 2, default: 0 })
-  ratePerKg!: number;
 
   @Column({ name: 'rate_per_kg', type: 'numeric', precision: 10, scale: 2, default: 0 })
   ratePerKg!: number;
