@@ -218,6 +218,27 @@ export class PurchasesService {
       await this.purchaseOrderItemRepository.save(items);
     }
 
+    // Handle cages if provided
+    if (updatePurchaseOrderDto.cages !== undefined) {
+      // Delete existing cages
+      await this.purchaseOrderCageRepository.delete({ purchaseOrderId: id });
+
+      // Create new cages if array is not empty
+      if (updatePurchaseOrderDto.cages.length > 0) {
+        const cages = updatePurchaseOrderDto.cages.map(cage =>
+          this.purchaseOrderCageRepository.create({
+            cageId: cage.cageId,
+            birdType: cage.birdType,
+            numberOfBirds: cage.numberOfBirds,
+            cageWeight: cage.cageWeight,
+            purchaseOrderId: id,
+          })
+        );
+
+        await this.purchaseOrderCageRepository.save(cages);
+      }
+    }
+
     // Calculate charges (use existing values if not provided, handle string types)
     const transportCharges = updatePurchaseOrderDto.transportCharges !== undefined
       ? parseFloat(updatePurchaseOrderDto.transportCharges) 
