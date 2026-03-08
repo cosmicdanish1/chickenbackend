@@ -177,4 +177,188 @@ export class ReportsService {
 
     return grouped;
   }
+
+  async getGrossProfitReport(startDate?: string, endDate?: string) {
+    const whereClausePurchase: any = {};
+    const whereClauseSale: any = {};
+    
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      whereClausePurchase.orderDate = Between(start, end);
+      whereClauseSale.saleDate = Between(start, end);
+    }
+
+    const purchases = await this.purchaseRepository.find({ where: whereClausePurchase });
+    const sales = await this.saleRepository.find({ where: whereClauseSale });
+
+    const totalRevenue = sales.reduce((sum, s) => sum + parseFloat(s.netAmount as any), 0);
+    const totalCost = purchases.reduce((sum, p) => sum + parseFloat(p.netAmount as any), 0);
+    const grossProfit = totalRevenue - totalCost;
+    const grossProfitMargin = totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
+
+    return {
+      summary: {
+        totalRevenue,
+        totalCost,
+        grossProfit,
+        grossProfitMargin,
+      },
+      dateRange: { startDate, endDate },
+    };
+  }
+
+  async getExpenseBreakdown(startDate?: string, endDate?: string) {
+    const whereClause: any = {};
+    
+    if (startDate && endDate) {
+      whereClause.expenseDate = Between(new Date(startDate), new Date(endDate));
+    }
+
+    const expenses = await this.expenseRepository.find({ where: whereClause });
+    const totalExpenses = expenses.reduce((sum, e) => sum + parseFloat(e.amount as any), 0);
+    const byCategory = this.groupExpensesByCategory(expenses);
+
+    const breakdown = Object.entries(byCategory).map(([category, amount]) => ({
+      category,
+      amount,
+      percentage: totalExpenses > 0 ? (amount / totalExpenses) * 100 : 0,
+      count: expenses.filter(e => (e.category || 'Other') === category).length,
+    })).sort((a, b) => b.amount - a.amount);
+
+    return {
+      summary: {
+        totalExpenses,
+        categoryCount: Object.keys(byCategory).length,
+      },
+      breakdown,
+      dateRange: { startDate, endDate },
+    };
+  }
+
+  async getBatchWiseProfit(startDate?: string, endDate?: string) {
+    const whereClause: any = {};
+    
+    if (startDate && endDate) {
+      whereClause.orderDate = Between(new Date(startDate), new Date(endDate));
+    }
+
+    const purchases = await this.purchaseRepository.find({ 
+      where: whereClause,
+      order: { orderDate: 'DESC' },
+    });
+
+    const batchProfit = purchases.map(purchase => {
+      const cost = parseFloat(purchase.netAmount as any);
+      // Note: In a real system, you'd match this with actual sales from this batch
+      // For now, we'll show the cost and potential profit margin
+      return {
+        orderNumber: purchase.orderNumber,
+        orderDate: purchase.orderDate,
+        supplierName: purchase.supplierName,
+        totalWeight: purchase.totalWeight,
+        cost,
+        // This would be calculated from matched sales in a complete system
+        estimatedRevenue: 0,
+        profit: 0,
+        profitMargin: 0,
+      };
+    });
+
+    return {
+      batches: batchProfit,
+      summary: {
+        totalBatches: purchases.length,
+        totalCost: purchases.reduce((sum, p) => sum + parseFloat(p.netAmount as any), 0),
+      },
+      dateRange: { startDate, endDate },
+    };
+  }
+
+  async getFarmWiseProfit(startDate?: string, endDate?: string) {
+    const whereClause: any = {};
+    
+    if (startDate && endDate) {
+      whereClause.orderDate = Between(new Date(startDate), new Date(endDate));
+    }
+
+    const purchases = await this.purchaseRepository.find({ where: whereClause });
+
+    // Group by farmer
+    const farmData: Record<string, any> = {};
+    
+    purchases.forEach(purchase => {
+      const farmerKey = purchase.farmerId || purchase.supplierName || 'Unknown';
+      
+      if (!farmData[farmerKey]) {
+        farmData[farmerKey] = {
+          farmerId: purchase.farmerId,
+          farmerName: purchase.supplierName,
+          farmerMobile: purchase.farmerMobile,
+          farmLocation: purchase.farmLocation,
+          totalOrders: 0,
+          totalCost: 0,
+          totalWeight: 0,
+        };
+      }
+      
+      farmData[farmerKey].totalOrders += 1;
+      farmData[farmerKey].totalCost += parseFloat(purchase.netAmount as any);
+      farmData[farmerKey].totalWeight += parseFloat(purchase.totalWeight as any || '0');
+    });
+
+    const farmWiseData = Object.values(farmData).sort((a: any, b: any) => b.totalCost - a.totalCost);
+
+    return {
+      farms: farmWiseData,
+      summary: {
+        totalFarms: farmWiseData.length,
+        totalCost: farmWiseData.reduce((sum: number, f: any) => sum + f.totalCost, 0),
+        totalOrders: purchases.length,
+      },
+      dateRange: { startDate, endDate },
+    };
+  }
+
+  async getCustomerWiseSales(startDate?: string, endDate?: string) {
+    const whereClause: any = {};
+    
+    if (startDate && endDate) {
+      whereClause.saleDate = Between(new Date(startDate), new Date(endDate));
+    }
+
+    const sales = await this.saleRepository.find({ where: whereClause });
+
+    // Group by customer
+    const customerData: Record<string, any> = {};
+    
+    sales.forEach(sale => {
+      const customerKey = sale.customerName || 'Unknown';
+      
+      if (!customerData[customerKey]) {
+        customerData[customerKey] = {
+          customerName: sale.customerName,
+          totalSales: 0,
+          totalRevenue: 0,
+          totalQuantity: 0,
+        };
+      }
+      
+      customerData[customerKey].totalSales += 1;
+      customerData[customerKey].totalRevenue += parseFloat(sale.netAmount as any);
+      customerData[customerKey].totalQuantity += parseFloat(sale.quantity as any || '0');
+    });
+
+    const customerWiseData = Object.values(customerData).sort((a: any, b: any) => b.totalRevenue - a.totalRevenue);
+
+    return {
+      customers: customerWiseData,
+      summary: {
+        totalCustomers: customerWiseData.length,
+        totalRevenue: customerWiseData.reduce((sum: number, c: any) => sum + c.totalRevenue, 0),
+        totalSales: sales.length,
+      },
+      dateRange: { startDate, endDate },
+    };
+  }
 }

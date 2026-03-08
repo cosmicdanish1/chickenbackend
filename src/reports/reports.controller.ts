@@ -38,4 +38,44 @@ export class ReportsController {
   ) {
     return this.reportsService.getProfitLossReport(startDate, endDate);
   }
+
+  @Get('gross-profit')
+  async getGrossProfitReport(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.reportsService.getGrossProfitReport(startDate, endDate);
+  }
+
+  @Get('expense-breakdown')
+  async getExpenseBreakdown(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.reportsService.getExpenseBreakdown(startDate, endDate);
+  }
+
+  @Get('batch-wise-profit')
+  async getBatchWiseProfit(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.reportsService.getBatchWiseProfit(startDate, endDate);
+  }
+
+  @Get('farm-wise-profit')
+  async getFarmWiseProfit(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.reportsService.getFarmWiseProfit(startDate, endDate);
+  }
+
+  @Get('customer-wise-sales')
+  async getCustomerWiseSales(
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.reportsService.getCustomerWiseSales(startDate, endDate);
+  }
 }
