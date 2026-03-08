@@ -19,6 +19,7 @@ import { SalesModule } from './sales/sales.module';
 import { Sale } from './sales/sale.entity';
 import { ExpensesModule } from './expenses/expenses.module';
 import { Expense } from './expenses/expense.entity';
+import { ReportsModule } from './reports/reports.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { InventoryModule } from './inventory/inventory.module';
 import { InventoryItem } from './inventory/entities/inventory-item.entity';
@@ -87,6 +88,7 @@ import { Product } from './products/product.entity';
     PurchasesModule,
     SalesModule,
     ExpensesModule,
+    ReportsModule,
     DashboardModule,
     InventoryModule,
     SettingsModule,
