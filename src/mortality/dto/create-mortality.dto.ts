@@ -1,32 +1,33 @@
-import { IsString, IsOptional, IsDateString, IsNumber, MaxLength } from 'class-validator';
+import { IsString, IsOptional, IsDateString, IsInt, Min } from 'class-validator';
 
 export class CreateMortalityDto {
   @IsString()
-  @MaxLength(50)
-  recordNumber!: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(50)
-  purchaseInvoiceNo?: string;
-
-  @IsOptional()
-  @IsString()
-  purchaseOrderId?: string;
-
-  @IsOptional()
-  @IsString()
-  vehicleId?: string;
+  purchaseInvoiceNo!: string;
 
   @IsDateString()
-  mortalityDate!: string;
+  purchaseDate!: string;
 
-  @IsNumber()
-  numberOfBirdsDied!: number;
+  @IsString()
+  farmerName!: string;
 
   @IsOptional()
   @IsString()
-  reason?: string;
+  farmLocation?: string;
+
+  @IsOptional()
+  @IsString()
+  cageIdNumber?: string;
+
+  @IsInt()
+  @Min(0)
+  totalBirdsPurchased!: number;
+
+  @IsInt()
+  @Min(1)
+  numberOfBirdsDied!: number;
+
+  @IsString()
+  cause!: string;
 
   @IsOptional()
   @IsString()

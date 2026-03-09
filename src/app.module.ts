@@ -36,7 +36,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { RolePermission } from './permissions/entities/role-permission.entity';
 import { UserPermission } from './permissions/entities/user-permission.entity';
 import { MortalityModule } from './mortality/mortality.module';
-import { MortalityRecord } from './mortality/mortality.entity';
+import { Mortality } from './mortality/mortality.entity';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/product.entity';
 
@@ -59,7 +59,7 @@ import { Product } from './products/product.entity';
             ssl: {
               rejectUnauthorized: false
             },
-            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, PurchaseOrderCage, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission, MortalityRecord, Product],
+            entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, PurchaseOrderCage, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission, Mortality, Product],
             synchronize: false, // NEVER sync in production
             logging: config.get<boolean>('DB_LOGGING', false),
           };
@@ -73,7 +73,7 @@ import { Product } from './products/product.entity';
           username: config.get<string>('DB_USERNAME', 'postgres'),
           password: config.get<string>('DB_PASSWORD', 'postgres'),
           database: config.get<string>('DB_NAME', 'poultry'),
-          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, PurchaseOrderCage, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission, MortalityRecord, Product],
+          entities: [User, Vehicle, Farmer, Retailer, PurchaseOrder, PurchaseOrderItem, PurchaseOrderCage, Sale, Expense, InventoryItem, Settings, AuditLog, GodownInwardEntry, GodownSale, GodownMortality, GodownExpense, RolePermission, UserPermission, Mortality, Product],
           synchronize: false, // NEVER sync in production
           logging: config.get<boolean>('DB_LOGGING', false),
         };

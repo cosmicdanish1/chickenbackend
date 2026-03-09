@@ -1,85 +1,75 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { MortalityRecord } from './mortality.entity';
+import { Mortality } from './mortality.entity';
 import { CreateMortalityDto } from './dto/create-mortality.dto';
 import { UpdateMortalityDto } from './dto/update-mortality.dto';
+import { PurchaseOrder } from '../purchases/entities/purchase-order.entity';
 
 @Injectable()
 export class MortalityService {
   constructor(
-    @InjectRepository(MortalityRecord)
-    private readonly mortalityRepository: Repository<MortalityRecord>,
+    @InjectRepository(Mortality)
+    private mortalityRepository: Repository<Mortality>,
+    @InjectRepository(PurchaseOrder)
+    private purchaseOrderRepository: Repository<PurchaseOrder>,
   ) {}
 
-  async create(createMortalityDto: CreateMortalityDto): Promise<MortalityRecord> {
-    // Check if record number already exists
-    const existingRecord = await this.mortalityRepository.findOne({
-      where: { recordNumber: createMortalityDto.recordNumber },
-    });
-    if (existingRecord) {
-      throw new BadRequestException(`Mortality record with number ${createMortalityDto.recordNumber} already exists`);
-    }
+  async create(createMortalityDto: CreateMortalityDto): Promise<Mortality> {
+    // Generate record number
+    const count = await this.mortalityRepository.count();
+    const recordNumber = `MRT-${Date.now()}-${count + 1}`;
 
-    const mortality = this.mortalityRepository.create(createMortalityDto);
+    // Find purchase order by invoice number
+    const purchaseOrder = await this.purchaseOrderRepository.findOne({
+      where: { orderNumber: createMortalityDto.purchaseInvoiceNo },
+      relations: ['cages'],
+    });
+
+    const mortality = this.mortalityRepository.create({
+      ...createMortalityDto,
+      recordNumber,
+      purchaseOrderId: purchaseOrder?.id,
+    });
+
     return this.mortalityRepository.save(mortality);
   }
 
-  async findAll(
-    startDate?: string,
-    endDate?: string,
-    vehicleId?: string,
-    purchaseOrderId?: string,
-  ): Promise<MortalityRecord[]> {
-    const query = this.mortalityRepository.createQueryBuilder('mortality')
-      .leftJoinAndSelect('mortality.purchaseOrder', 'purchaseOrder')
-      .leftJoinAndSelect('mortality.vehicle', 'vehicle')
-      .orderBy('mortality.mortalityDate', 'DESC');
-
-    if (startDate && endDate) {
-      query.andWhere('mortality.mortalityDate BETWEEN :startDate AND :endDate', {
-        startDate,
-        endDate,
-      });
-    }
-
-    if (vehicleId) {
-      query.andWhere('mortality.vehicleId = :vehicleId', { vehicleId });
-    }
-
-    if (purchaseOrderId) {
-      query.andWhere('mortality.purchaseOrderId = :purchaseOrderId', { purchaseOrderId });
-    }
-
-    return query.getMany();
+  async findAll(): Promise<Mortality[]> {
+    return this.mortalityRepository.find({
+      relations: ['purchaseOrder'],
+      order: { createdAt: 'DESC' },
+    });
   }
 
-  async findOne(id: string): Promise<MortalityRecord> {
+  async findOne(id: string): Promise<Mortality> {
     const mortality = await this.mortalityRepository.findOne({
       where: { id },
-      relations: ['purchaseOrder', 'vehicle'],
+      relations: ['purchaseOrder'],
     });
+
     if (!mortality) {
       throw new NotFoundException(`Mortality record with ID ${id} not found`);
     }
+
     return mortality;
   }
 
-  async update(id: string, updateMortalityDto: UpdateMortalityDto): Promise<MortalityRecord> {
+  async update(id: string, updateMortalityDto: UpdateMortalityDto): Promise<Mortality> {
     const mortality = await this.findOne(id);
 
-    // If record number is being updated, check for duplicates
-    if (updateMortalityDto.recordNumber && updateMortalityDto.recordNumber !== mortality.recordNumber) {
-      const existingRecord = await this.mortalityRepository.findOne({
-        where: { recordNumber: updateMortalityDto.recordNumber },
+    // If purchase invoice changed, update the relation
+    if (updateMortalityDto.purchaseInvoiceNo && 
+        updateMortalityDto.purchaseInvoiceNo !== mortality.purchaseInvoiceNo) {
+      const purchaseOrder = await this.purchaseOrderRepository.findOne({
+        where: { orderNumber: updateMortalityDto.purchaseInvoiceNo },
       });
-      if (existingRecord) {
-        throw new BadRequestException(`Mortality record with number ${updateMortalityDto.recordNumber} already exists`);
-      }
+      mortality.purchaseOrderId = purchaseOrder?.id;
     }
 
     Object.assign(mortality, updateMortalityDto);
     mortality.updatedAt = new Date();
+
     return this.mortalityRepository.save(mortality);
   }
 
@@ -88,27 +78,22 @@ export class MortalityService {
     await this.mortalityRepository.remove(mortality);
   }
 
-  async getStats(startDate?: string, endDate?: string): Promise<{
-    totalRecords: number;
-    totalBirdsDied: number;
-    averagePerRecord: number;
-  }> {
-    const query = this.mortalityRepository.createQueryBuilder('mortality');
-
-    if (startDate && endDate) {
-      query.where('mortality.mortalityDate BETWEEN :startDate AND :endDate', {
-        startDate,
-        endDate,
-      });
-    }
-
-    const records = await query.getMany();
-    const totalBirdsDied = records.reduce((sum, record) => sum + record.numberOfBirdsDied, 0);
+  async getStats() {
+    const mortalities = await this.findAll();
+    
+    const totalBirdsPurchased = mortalities.reduce((sum, m) => sum + m.totalBirdsPurchased, 0);
+    const totalBirdsDeath = mortalities.reduce((sum, m) => sum + m.numberOfBirdsDied, 0);
+    const totalValue = mortalities.reduce((sum, m) => {
+      // Estimate value based on average bird price (you can adjust this)
+      const avgPricePerBird = 150; // ₹150 per bird
+      return sum + (m.numberOfBirdsDied * avgPricePerBird);
+    }, 0);
 
     return {
-      totalRecords: records.length,
-      totalBirdsDied,
-      averagePerRecord: records.length > 0 ? totalBirdsDied / records.length : 0,
+      totalBirdsPurchased,
+      totalBirdsDeath,
+      totalValue,
+      totalRecords: mortalities.length,
     };
   }
 }
