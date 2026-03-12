@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "name": "Fresh Eggs Center",
+    "owner_name": "Rahul Sharma",
+    "phone": "8000000001",
+    "email": "fresh.eggs@example.com",
+    "address": "Market Road, Pune",
+    "notes": "Regular egg retailer",
+    "created_at": "2026-02-10T13:18:15.522Z",
+    "updated_at": "2026-02-10T13:18:15.522Z",
+    "status": "active"
+  },
+  {
+    "id": "28",
+    "name": "Al-Madina Poultry Shop",
+    "owner_name": "Imran Sheikh",
+    "phone": "03111234567",
+    "email": "madina@example.com",
+    "address": "Main Bazar, Faisalabad",
+    "notes": "Regular customer",
+    "created_at": "2026-03-03T21:42:23.700Z",
+    "updated_at": "2026-03-03T21:42:23.700Z",
+    "status": "active"
+  },
+  {
+    "id": "29",
+    "name": "City Chicken Center",
+    "owner_name": "Kashif Mahmood",
+    "phone": "03121234567",
+    "email": "city@example.com",
+    "address": "Ghulam Muhammad Abad, Faisalabad",
+    "notes": "Regular customer",
+    "created_at": "2026-03-03T21:42:24.009Z",
+    "updated_at": "2026-03-03T21:42:24.009Z",
+    "status": "active"
+  },
+  {
+    "id": "30",
+    "name": "Fresh Poultry Mart",
+    "owner_name": "Nadeem Abbas",
+    "phone": "03131234567",
+    "email": "fresh@example.com",
+    "address": "Peoples Colony, Faisalabad",
+    "notes": "Regular customer",
+    "created_at": "2026-03-03T21:42:24.323Z",
+    "updated_at": "2026-03-03T21:42:24.323Z",
+    "status": "active"
+  },
+  {
+    "id": "31",
+    "name": "Royal Chicken Shop",
+    "owner_name": "Tariq Mehmood",
+    "phone": "03141234567",
+    "email": "royal@example.com",
+    "address": "Samanabad, Faisalabad",
+    "notes": "Regular customer",
+    "created_at": "2026-03-03T21:42:24.569Z",
+    "updated_at": "2026-03-03T21:42:24.569Z",
+    "status": "active"
+  }
+]

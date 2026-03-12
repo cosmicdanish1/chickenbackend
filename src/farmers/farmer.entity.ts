@@ -17,6 +17,9 @@ export class Farmer {
   @Column({ type: 'text', nullable: true })
   address?: string;
 
+  @Column({ name: 'farmhouse_name', type: 'varchar', length: 150, nullable: true })
+  farmhouseName?: string;
+
   @Column({ type: 'text', nullable: true })
   notes?: string;
 

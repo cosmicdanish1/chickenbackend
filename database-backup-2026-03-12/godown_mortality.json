@@ -1,0 +1,29 @@
+[
+  {
+    "id": "10",
+    "number_of_birds_died": 15,
+    "notes": "Recorded mortality",
+    "created_at": "2026-03-03T21:42:35.211Z",
+    "updated_at": "2026-03-03T21:42:35.211Z",
+    "mortality_date": "2024-02-16T18:30:00.000Z",
+    "reason": "Disease"
+  },
+  {
+    "id": "11",
+    "number_of_birds_died": 10,
+    "notes": "Recorded mortality",
+    "created_at": "2026-03-03T21:42:35.471Z",
+    "updated_at": "2026-03-03T21:42:35.471Z",
+    "mortality_date": "2024-02-22T18:30:00.000Z",
+    "reason": "Heat Stress"
+  },
+  {
+    "id": "12",
+    "number_of_birds_died": 8,
+    "notes": "Recorded mortality",
+    "created_at": "2026-03-03T21:42:35.713Z",
+    "updated_at": "2026-03-03T21:42:35.713Z",
+    "mortality_date": "2024-02-27T18:30:00.000Z",
+    "reason": "Unknown"
+  }
+]

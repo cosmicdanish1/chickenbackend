@@ -1,0 +1,121 @@
+[
+  {
+    "key": "currency",
+    "value": "INR",
+    "category": "general",
+    "description": "System currency",
+    "updated_at": "2026-02-10T12:45:26.814Z"
+  },
+  {
+    "key": "date_format",
+    "value": "DD/MM/YYYY",
+    "category": "general",
+    "description": "Date format",
+    "updated_at": "2026-02-15T20:11:57.989Z"
+  },
+  {
+    "key": "language",
+    "value": "en",
+    "category": "general",
+    "description": "System language",
+    "updated_at": "2026-02-15T20:11:57.989Z"
+  },
+  {
+    "key": "farmEmail",
+    "value": "info@azizpoultry.com",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.204Z"
+  },
+  {
+    "key": "emailAlerts",
+    "value": "true",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.248Z"
+  },
+  {
+    "key": "notifications",
+    "value": "true",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.340Z"
+  },
+  {
+    "key": "company_email",
+    "value": "info@azizpoultry.com",
+    "category": "general",
+    "description": "Company email",
+    "updated_at": "2026-03-03T12:12:05.432Z"
+  },
+  {
+    "key": "company_address",
+    "value": "Mumbai, Maharashtra, India",
+    "category": "general",
+    "description": "Company address",
+    "updated_at": "2026-03-03T12:12:05.433Z"
+  },
+  {
+    "key": "company_phone",
+    "value": "+91-9876543210",
+    "category": "general",
+    "description": "Company phone",
+    "updated_at": "2026-03-03T12:12:05.533Z"
+  },
+  {
+    "key": "theme",
+    "value": "dark",
+    "category": "general",
+    "description": "UI theme",
+    "updated_at": "2026-03-03T12:12:05.540Z"
+  },
+  {
+    "key": "farmLocation",
+    "value": "Country, Region",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.531Z"
+  },
+  {
+    "key": "low_stock_threshold",
+    "value": "100",
+    "category": "general",
+    "description": "Low stock alert",
+    "updated_at": "2026-03-03T12:12:05.543Z"
+  },
+  {
+    "key": "farmName",
+    "value": "Aziz Poultry Farm",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.639Z"
+  },
+  {
+    "key": "tax_rate",
+    "value": "18",
+    "category": "general",
+    "description": "GST tax rate",
+    "updated_at": "2026-03-03T12:12:05.731Z"
+  },
+  {
+    "key": "company_name",
+    "value": "Aziz Poultry",
+    "category": "general",
+    "description": "Company name",
+    "updated_at": "2026-03-03T12:12:05.732Z"
+  },
+  {
+    "key": "farmPhone",
+    "value": "+1-234-567-8900",
+    "category": "general",
+    "description": null,
+    "updated_at": "2026-03-03T12:12:05.785Z"
+  },
+  {
+    "key": "godown_capacity",
+    "value": "100111111",
+    "category": "godown",
+    "description": "Maximum godown capacity in number of birds",
+    "updated_at": "2026-03-03T17:49:13.275Z"
+  }
+]

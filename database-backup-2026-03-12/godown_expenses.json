@@ -1,0 +1,46 @@
+[
+  {
+    "id": "1",
+    "category": "feed",
+    "amount": "8000.00",
+    "payment_method": "cash",
+    "notes": "Godown expense",
+    "created_at": "2026-03-03T21:42:35.986Z",
+    "updated_at": "2026-03-03T21:42:35.986Z",
+    "expense_date": "2024-02-15T18:30:00.000Z",
+    "description": "Bird Feed"
+  },
+  {
+    "id": "2",
+    "category": "labor",
+    "amount": "5000.00",
+    "payment_method": "cash",
+    "notes": "Godown expense",
+    "created_at": "2026-03-03T21:42:36.230Z",
+    "updated_at": "2026-03-03T21:42:36.230Z",
+    "expense_date": "2024-02-19T18:30:00.000Z",
+    "description": "Worker Wages"
+  },
+  {
+    "id": "3",
+    "category": "utilities",
+    "amount": "3000.00",
+    "payment_method": "bank_transfer",
+    "notes": "Godown expense",
+    "created_at": "2026-03-03T21:42:36.495Z",
+    "updated_at": "2026-03-03T21:42:36.495Z",
+    "expense_date": "2024-02-24T18:30:00.000Z",
+    "description": "Electricity"
+  },
+  {
+    "id": "4",
+    "category": "maintenance",
+    "amount": "2000.00",
+    "payment_method": "cash",
+    "notes": "Godown expense",
+    "created_at": "2026-03-03T21:42:36.740Z",
+    "updated_at": "2026-03-03T21:42:36.740Z",
+    "expense_date": "2024-02-27T18:30:00.000Z",
+    "description": "Shed Cleaning"
+  }
+]

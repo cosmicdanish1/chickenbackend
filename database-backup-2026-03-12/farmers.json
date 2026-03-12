@@ -1,0 +1,167 @@
+[
+  {
+    "id": "1",
+    "name": "Farmer A",
+    "phone": "9000000001",
+    "email": "farmer.a@example.com",
+    "address": "Village A, Taluka X",
+    "notes": "Supplies broiler birds",
+    "created_at": "2026-02-10T13:18:15.522Z",
+    "updated_at": "2026-02-10T13:18:15.522Z",
+    "status": "active"
+  },
+  {
+    "id": "29",
+    "name": "Ahmed Khan",
+    "phone": "03001234567",
+    "email": "ahmed@example.com",
+    "address": "Village Chak 123, Faisalabad",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-03T21:42:22.414Z",
+    "updated_at": "2026-03-03T21:42:22.414Z",
+    "status": "active"
+  },
+  {
+    "id": "30",
+    "name": "Muhammad Ali",
+    "phone": "03011234567",
+    "email": "ali@example.com",
+    "address": "Village Kot Addu, Muzaffargarh",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-03T21:42:22.677Z",
+    "updated_at": "2026-03-03T21:42:22.677Z",
+    "status": "active"
+  },
+  {
+    "id": "31",
+    "name": "Hassan Raza",
+    "phone": "03021234567",
+    "email": "hassan@example.com",
+    "address": "Village Jaranwala, Faisalabad",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-03T21:42:22.920Z",
+    "updated_at": "2026-03-03T21:42:22.920Z",
+    "status": "active"
+  },
+  {
+    "id": "32",
+    "name": "Usman Tariq",
+    "phone": "03031234567",
+    "email": "usman@example.com",
+    "address": "Village Samundri, Faisalabad",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-03T21:42:23.188Z",
+    "updated_at": "2026-03-03T21:42:23.188Z",
+    "status": "active"
+  },
+  {
+    "id": "33",
+    "name": "Bilal Ahmed",
+    "phone": "03041234567",
+    "email": "bilal@example.com",
+    "address": "Village Tandlianwala, Faisalabad",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-03T21:42:23.436Z",
+    "updated_at": "2026-03-03T21:42:23.436Z",
+    "status": "inactive"
+  },
+  {
+    "id": "34",
+    "name": "Test",
+    "phone": "+25626323232323",
+    "email": null,
+    "address": "test",
+    "notes": "test",
+    "created_at": "2026-03-04T10:27:16.292Z",
+    "updated_at": "2026-03-04T10:27:16.292Z",
+    "status": "active"
+  },
+  {
+    "id": "35",
+    "name": "Usman Tariq",
+    "phone": "+92-300-1234567",
+    "email": "usman.tariq@example.com",
+    "address": "Farm House, Village Chak 123, Faisalabad",
+    "notes": "Regular supplier, good quality birds",
+    "created_at": "2026-03-04T10:29:33.488Z",
+    "updated_at": "2026-03-04T10:29:33.488Z",
+    "status": "active"
+  },
+  {
+    "id": "36",
+    "name": "Ahmed Ali",
+    "phone": "+92-301-9876543",
+    "email": "ahmed.ali@example.com",
+    "address": "Poultry Farm, Jhang Road, Faisalabad",
+    "notes": "Large scale farmer",
+    "created_at": "2026-03-04T10:29:34.086Z",
+    "updated_at": "2026-03-04T10:29:34.086Z",
+    "status": "active"
+  },
+  {
+    "id": "37",
+    "name": "Muhammad Hassan",
+    "phone": "+92-302-5551234",
+    "email": "hassan@example.com",
+    "address": "Village Samundri, District Faisalabad",
+    "notes": "Broiler specialist",
+    "created_at": "2026-03-04T10:29:34.631Z",
+    "updated_at": "2026-03-04T10:29:34.631Z",
+    "status": "active"
+  },
+  {
+    "id": "38",
+    "name": "Bilal Khan",
+    "phone": "+92-303-7778888",
+    "email": "bilal.khan@example.com",
+    "address": "Chak 456, Jaranwala Road",
+    "notes": "New supplier",
+    "created_at": "2026-03-04T10:29:35.136Z",
+    "updated_at": "2026-03-04T10:29:35.136Z",
+    "status": "active"
+  },
+  {
+    "id": "39",
+    "name": "Imran Malik",
+    "phone": "+92-304-9991111",
+    "email": "imran.malik@example.com",
+    "address": "Farm 789, Satiana Road, Faisalabad",
+    "notes": "Premium quality birds",
+    "created_at": "2026-03-04T10:29:35.746Z",
+    "updated_at": "2026-03-04T10:29:35.746Z",
+    "status": "active"
+  },
+  {
+    "id": "40",
+    "name": "Kashif Mehmood",
+    "phone": "+92-305-2223333",
+    "email": "kashif@example.com",
+    "address": "Village Tandlianwala, Faisalabad",
+    "notes": "Reliable supplier",
+    "created_at": "2026-03-04T10:29:36.261Z",
+    "updated_at": "2026-03-04T10:29:36.261Z",
+    "status": "active"
+  },
+  {
+    "id": "41",
+    "name": "Tariq Hussain",
+    "phone": "+92-306-4445555",
+    "email": "tariq.hussain@example.com",
+    "address": "Poultry Complex, Sargodha Road",
+    "notes": "Bulk supplier",
+    "created_at": "2026-03-04T10:29:36.855Z",
+    "updated_at": "2026-03-04T10:29:36.855Z",
+    "status": "active"
+  },
+  {
+    "id": "42",
+    "name": "Nadeem Abbas",
+    "phone": "+92-307-6667777",
+    "email": "nadeem@example.com",
+    "address": "Farm House, Gojra Road, Faisalabad",
+    "notes": "Good payment history",
+    "created_at": "2026-03-04T10:29:37.472Z",
+    "updated_at": "2026-03-04T10:29:37.472Z",
+    "status": "active"
+  }
+]

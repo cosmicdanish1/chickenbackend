@@ -1,0 +1,23 @@
+{
+  "backupDate": "2026-03-12T09:26:49.500Z",
+  "totalTables": 16,
+  "totalRecords": 247,
+  "tables": [
+    "users",
+    "farmers",
+    "retailers",
+    "vehicles",
+    "inventory",
+    "purchase_orders",
+    "purchase_order_items",
+    "purchase_order_cages",
+    "sales",
+    "expenses",
+    "mortalities",
+    "godown_inward",
+    "godown_sales",
+    "godown_mortality",
+    "godown_expenses",
+    "settings"
+  ]
+}

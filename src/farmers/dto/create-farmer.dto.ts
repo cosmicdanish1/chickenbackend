@@ -21,6 +21,11 @@ export class CreateFarmerDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(150)
+  farmhouseName?: string;
+
+  @IsOptional()
+  @IsString()
   notes?: string;
 
   @IsOptional()
